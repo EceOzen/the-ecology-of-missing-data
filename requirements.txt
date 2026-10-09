@@ -1,0 +1,11 @@
+pygbif
+requests
+geopandas
+shapely
+pandas
+python-dotenv
+osmnx
+rasterio
+rasterstats
+tqdm
+numpy
