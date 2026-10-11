@@ -83,6 +83,39 @@ def best_recordings(latin_set):
     return out
 
 
+def xc_geo(latin_set, gdf, max_pts=40):
+    """Xeno-canto kayıtlarının koordinatları -> tür başına {il: kayıt sayısı} (xs) + nokta listesi [[lon,lat]] (xp).
+    Haritada ses katmanı için: kaydı olan iller, noktalar ve 'gözlem var / ses kaydı yok' (ses sessizliği)."""
+    path = RAW_DIR.parent / "cache" / "xenocanto_tr.json"
+    if not path.exists():
+        return {}
+    rows = []
+    for r in json.loads(path.read_text(encoding="utf-8")):
+        latin = f"{r.get('gen', '')} {r.get('sp', '')}".strip()
+        try:
+            lon, lat = float(r.get("lon")), float(r.get("lat"))
+        except (TypeError, ValueError):
+            continue
+        if latin in latin_set and r.get("grp") in (None, "", "birds"):
+            rows.append((latin, lon, lat))
+    if not rows:
+        return {}
+    pts = gpd.GeoDataFrame(rows, columns=["latin", "lon", "lat"],
+                           geometry=gpd.points_from_xy([r[1] for r in rows], [r[2] for r in rows]), crs=4326)
+    j = gpd.sjoin(pts, gdf[["il_adi", "geometry"]].to_crs(4326), how="left", predicate="within")
+    j = j[~j.index.duplicated(keep="first")]
+    out = {}
+    for latin, g in j.groupby("latin"):
+        xs = g["il_adi"].dropna().value_counts().to_dict()
+        coords = [[round(a, 2), round(b, 2)] for a, b in zip(g["lon"], g["lat"])]
+        if len(coords) > max_pts:
+            step = len(coords) / max_pts
+            coords = [coords[int(i * step)] for i in range(max_pts)]
+        out[latin] = {"xs": {k: int(v) for k, v in xs.items()}, "xp": coords}
+    print(f"Ses haritası: {len(out)} tür, {len(rows)} koordinatlı kayıt ({sum(len(v['xs']) > 0 for v in out.values())} türde il eşleşti).")
+    return out
+
+
 def classify_site(desig):
     d = str(desig or "").lower()
     if "ramsar" in d: return "ramsar"
@@ -204,6 +237,10 @@ def main():
     print(f"{len(species)} kuş türü siteye alındı ({sum(1 for s in species if 'tr' in s)} tanesinin Türkçe adı var).")
 
     gdf = load_boundaries()
+    xg = xc_geo({sp["latin"] for sp in species}, gdf)
+    for sp in species:
+        if sp["latin"] in xg:
+            sp["xs"], sp["xp"] = xg[sp["latin"]]["xs"], xg[sp["latin"]]["xp"]
     nb = neighbors(gdf)
     area = (gdf.to_crs(epsg=EQUAL_AREA_EPSG).geometry.area / 1e6).round().astype(int)
     area = dict(zip(gdf["il_adi"], area))

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
+<meta name="google" content="notranslate">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Ecology of Missing Data</title>
@@ -1009,6 +1010,11 @@ body.touring #tour-cap{opacity:1}
 .sc .lk a{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--alive);margin-right:1rem}
 #cmodal .modal-card{max-width:760px}
 @media (max-width:640px){.sc{flex-direction:column}.sc img,.sc .ph{width:100%;height:auto;max-height:260px;flex:none}}
+
+.xc-sil{fill:url(#xc-hatch);stroke:none;pointer-events:none}
+.xc-has{fill:none;stroke:#ffd166;stroke-width:1.3;pointer-events:none}
+.xc-dot{fill:#ffd166;stroke:#10160f;stroke-width:.6;pointer-events:none;animation:xcp 1.6s ease-in-out infinite}
+@keyframes xcp{0%,100%{opacity:.95}50%{opacity:.45}}
 </style>
 </head>
 <body>
@@ -1127,7 +1133,7 @@ body.touring #tour-cap{opacity:1}
   <path class="il" data-il="Yalova" id="il-yalova" d="M 157.88,74.70 L 159.77,75.16 L 159.31,81.24 L 156.60,80.33 L 152.83,81.43 L 144.01,81.29 L 142.63,84.14 L 143.50,85.01 L 141.23,86.06 L 137.59,85.00 L 136.42,83.74 L 133.50,83.17 L 134.02,81.60 L 139.51,79.39 L 141.87,77.35 L 153.40,76.63 L 157.88,74.70 Z"><title>Yalova</title></path>
   <path class="il" data-il="Yozgat" id="il-yozgat" d="M 393.72,97.08 L 395.25,98.25 L 400.41,98.32 L 405.21,103.05 L 417.24,103.39 L 418.24,105.07 L 418.30,107.69 L 419.19,109.57 L 418.39,111.68 L 421.62,113.86 L 422.53,117.06 L 424.67,118.78 L 424.61,121.22 L 425.97,121.96 L 422.50,128.44 L 422.38,130.01 L 418.91,133.68 L 413.34,137.60 L 411.89,139.92 L 408.80,142.76 L 406.70,143.88 L 401.95,143.82 L 398.81,144.56 L 398.50,145.95 L 399.26,148.58 L 389.67,152.91 L 381.59,151.42 L 380.20,148.71 L 379.95,146.68 L 375.98,142.69 L 376.95,137.61 L 372.05,135.28 L 371.83,133.32 L 365.27,130.39 L 361.73,127.91 L 361.15,126.87 L 362.07,124.49 L 359.04,122.19 L 357.34,119.38 L 354.63,118.66 L 349.76,119.21 L 343.19,115.91 L 342.61,111.45 L 343.88,110.74 L 351.52,109.97 L 356.11,107.45 L 372.21,107.35 L 376.32,104.78 L 382.37,105.70 L 387.20,102.89 L 386.76,97.24 L 391.55,97.22 L 393.28,96.52 L 393.72,97.08 Z"><title>Yozgat</title></path>
   <path class="il" data-il="Zonguldak" id="il-zonguldak" d="M 262.00,35.01 L 262.80,36.83 L 273.26,46.85 L 275.20,49.97 L 273.01,50.05 L 266.48,53.70 L 264.87,57.46 L 264.81,60.12 L 238.92,58.37 L 234.93,54.66 L 237.73,51.16 L 237.47,48.45 L 238.06,48.83 L 238.20,48.33 L 237.03,47.41 L 237.37,46.40 L 246.10,43.32 L 251.18,40.69 L 251.42,39.98 L 252.66,40.02 L 256.97,36.82 L 262.00,35.01 Z"><title>Zonguldak</title></path>
-</svg>
+<defs><pattern id="xc-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#ffd166" stroke-width="1" opacity=".5"/></pattern></defs><g id="xc-layer"></g></svg>
     </div>
 
     <div class="legend" id="map-legend">
@@ -1160,6 +1166,7 @@ body.touring #tour-cap{opacity:1}
     <div class="species-now" id="species-now"></div>
     <div class="species-waveform-label" id="species-waveform-label"></div>
     <div class="fine" id="bird-credit" style="margin:.2rem 0 0"></div>
+    <div class="fine" id="xc-legend" style="margin:.2rem 0 0"></div>
     <div class="species-waveform" id="species-waveform"></div>
     <p class="read-note" data-i18n="readnote"></p>
   </div>
@@ -1279,7 +1286,7 @@ try { const s = localStorage.getItem('lang'); if (['en','tr','fr','es','de'].inc
 const WARN = 'color:#b8893c';
 const T = {
  en: {
-  eyebrow:'MozFest 2026 · Wilding Creativity · Concept Prototype',
+  eyebrow:'MozFest 2026 · Wilding Creativity',
   subtitle:'Ecological Ghosts · Citizen Science · Data Silence',
   instr:'↗ Click a province · or choose a bird below',
   hint:"Brighter = more records per km². Click a province to see what was recorded, and what probably wasn't.",
@@ -1288,7 +1295,7 @@ const T = {
   readnote:'<b>How to read this:</b> brightness = GBIF records per 100 km² (2010–2026; eBird feeds GBIF), log scale. Pick a bird: green = recorded; <span style="'+WARN+'">amber = no record here, but a neighbouring province has one (possibly unrecorded, not necessarily absent)</span>; dark = no record nearby. Records reflect where observers go, not only where birds are. ♪ LISTEN: each province is a tone, higher = more records; no record = silence.',
   placeholder:'Click a province.<br><br>Some places are loud with observation. Others hold ecological ghosts: species that are probably there, but were never recorded.<br><br><em>The silence is not absence.<br>It is a record of what was never counted.</em>',
   quote:"<em>What gets measured gets protected. What doesn't — doesn't.</em>",
-  footer1:'CONCEPT PROTOTYPE · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Data: GBIF (incl. eBird, iNaturalist) · eBird · WorldPop · EltonTraits (names)',
   d_lo:'few records', d_hi:'many records per km² (log)',
   l_rec:n=>'Recorded ('+n+')', l_ghost:n=>'Not recorded, neighbour has it ('+n+')', l_none:n=>'No record nearby ('+n+')',
@@ -1300,7 +1307,7 @@ const T = {
   now_none:'no record', now_rec:c=>c+' records', national:n=>n+' records nationwide', recs:'records', loc:'en-GB'
  },
  tr: {
-  eyebrow:'MozFest 2026 · Wilding Creativity · Konsept Prototipi',
+  eyebrow:'MozFest 2026 · WILDING CREATIVITY ',
   subtitle:'Ekolojik Hayaletler · Vatandaş Bilimi · Veri Sessizliği',
   instr:'↗ Bir ile tıkla · ya da aşağıdan bir kuş seç',
   hint:'Daha parlak = km² başına daha fazla kayıt. Bir ile tıkla: nelerin kaydedildiğini, nelerin muhtemelen kaydedilmediğini gör.',
@@ -1309,7 +1316,7 @@ const T = {
   readnote:'<b>Nasıl okunur:</b> parlaklık = 100 km² başına GBIF kaydı (2010–2026; eBird GBIF\'e akar), log ölçek. Bir kuş seçince: yeşil = kayıtlı; <span style="'+WARN+'">kehribar = burada kayıt yok ama komşu ilde var (belki kaydedilmemiş, mutlaka yok demek değil)</span>; koyu = yakında da kayıt yok. Kayıtlar yalnızca kuşların nerede olduğunu değil, gözlemcilerin nereye gittiğini de yansıtır. ♪ DİNLE: her il bir ton, yükseklik = kayıt sayısı; kayıt yoksa sessizlik.',
   placeholder:'Bir ile tıkla.<br><br>Bazı yerler gözlemle gürültülüdür. Bazıları ekolojik hayaletler barındırır: muhtemelen orada olan ama hiç kaydedilmemiş türler.<br><br><em>Sessizlik yokluk değildir.<br>Sayılmamış olanın kaydıdır.</em>',
   quote:'<em>Ölçülen korunur. Ölçülmeyen — korunmaz.</em>',
-  footer1:'KONSEPT PROTOTİPİ · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Veri: GBIF (eBird ve iNaturalist dahil) · eBird · WorldPop · EltonTraits (isimler)',
   d_lo:'az kayıt', d_hi:'km² başına çok kayıt (log)',
   l_rec:n=>'Kayıtlı ('+n+')', l_ghost:n=>'Kayıt yok, komşuda var ('+n+')', l_none:n=>'Yakında da kayıt yok ('+n+')',
@@ -1376,11 +1383,11 @@ const PAGES = {
   fut_h:'Future work: what we imagine', fut_intro:'This is a first prototype. Here is where it could go, and what it would take.',
   fut_items:[
    ['Seasonal silence','Month-by-month records show which provinces fall quiet while migration passes through.'],
-   ['Hearing the data','Real sound recordings (e.g. Xeno-canto) reveal where birds are heard but never logged.'],
    ['Food webs','Compare bird records with the insects and plants a species depends on: expected, but absent.'],
    ['Range maps','Expert range maps or modelled occurrence could separate "not there" from "not recorded".'],
    ['Why places are silent','Roads, population and protected areas as layers of access, to test the infrastructure argument.'],
-   ['Local names, local knowledge','Common names in local languages, and records and stories from observers that never reach global databases.']],
+   ['Local names, local knowledge', 'Common names in local languages, and records and stories from observers that never reach global databases.'],
+   ['International Collaboration', 'We want to turn this an global map that we can review and show the effect of citizen science.']],
   need_h:'What we need',
   needs:['Access to the eBird Basic Dataset and species range maps','Ornithologists to review the "recorded next door" layer','Local observers to tell us where they never go, and why','Translators and proofreaders','Support for a touchscreen setup at MozFest Barcelona'],
   fut_cta:'Help us: get in touch',
@@ -1397,11 +1404,11 @@ const PAGES = {
   fut_h:'Gelecek çalışmalar: neler hayal ediyoruz', fut_intro:'Bu ilk bir prototip. Nereye gidebileceği ve bunun için neye ihtiyaç olduğu aşağıda.',
   fut_items:[
    ['Mevsimsel sessizlik','Ay ay kayıtlar, göç geçerken hangi illerin sessizleştiğini gösterir.'],
-   ['Veriyi duymak','Gerçek ses kayıtları (ör. Xeno-canto), kuşların nerede duyulup hiç kaydedilmediğini ortaya çıkarır.'],
    ['Besin ağları','Kuş kayıtlarını türün bağımlı olduğu böcek ve bitkilerle karşılaştırmak: beklenen ama yok.'],
    ['Yayılış haritaları','Uzman yayılış haritaları ya da modellenmiş bulunma, "orada yok" ile "kaydedilmemiş"i ayırabilir.'],
    ['Yerler neden sessiz','Yollar, nüfus ve korunan alanlar erişim katmanları olarak, altyapı argümanını sınamak için.'],
-   ['Yerel adlar, yerel bilgi','Yerel dillerdeki adlar ve küresel veri tabanlarına hiç ulaşmayan gözlemci kayıtları ve hikâyeleri.']],
+   ['Yerel adlar, yerel bilgi', 'Yerel dillerdeki adlar ve küresel veri tabanlarına hiç ulaşmayan gözlemci kayıtları ve hikâyeleri.']
+   ['Uluslararası İşbirliği', 'Bunu, inceleyebileceğimiz ve yurttaş biliminin etkisini gösterebileceğimiz küresel bir haritaya dönüştürmek istiyoruz.']],
   need_h:'Neye ihtiyacımız var',
   needs:['eBird Basic Dataset ve tür yayılış haritalarına erişim','"Komşuda kayıtlı" katmanını inceleyecek ornitologlar','Nereye hiç gitmediklerini ve nedenini anlatacak yerel gözlemciler','Çevirmenler ve redaktörler','MozFest Barcelona\'da dokunmatik ekran kurulumu için destek'],
   fut_cta:'Destek ol: bize yaz',
@@ -1418,11 +1425,11 @@ const PAGES = {
   fut_h:'Perspectives : ce que nous imaginons', fut_intro:"Ceci est un premier prototype. Voici où il pourrait aller, et ce qu'il faudrait pour y arriver.",
   fut_items:[
    ['Silence saisonnier',"Les enregistrements mois par mois montrent quelles provinces se taisent au passage de la migration."],
-   ['Entendre les données',"De vrais enregistrements sonores (p. ex. Xeno-canto) révèlent où les oiseaux sont entendus mais jamais notés."],
    ['Réseaux trophiques',"Comparer les observations d'oiseaux aux insectes et plantes dont une espèce dépend : attendue, mais absente."],
    ['Cartes de répartition','Des cartes de répartition expertes ou une présence modélisée pourraient distinguer « pas là » de « non enregistré ».'],
    ['Pourquoi ces lieux se taisent',"Routes, population et aires protégées comme couches d'accessibilité, pour tester l'argument de l'infrastructure."],
-   ['Noms locaux, savoirs locaux',"Noms dans les langues locales, et observations et récits d'observateurs qui n'atteignent jamais les bases mondiales."]],
+   ['Noms locaux, savoirs locaux', "Noms dans les langues locales, et observations et récits d'observateurs qui n'atteignent jamais les bases mondiales."],
+   ['Collaboration internationale', 'Nous voulons en faire une carte mondiale que nous pourrons examiner et qui permettra de montrer l’impact de la science citoyenne.']     ],
   need_h:"Ce dont nous avons besoin",
   needs:["Accès à l'eBird Basic Dataset et aux cartes de répartition des espèces",'Des ornithologues pour relire la couche « enregistré à côté »',"Des observateurs locaux pour nous dire où ils ne vont jamais, et pourquoi",'Des traducteurs et relecteurs',"Un soutien pour un dispositif tactile à MozFest Barcelone"],
   fut_cta:'Aide-nous : écris-nous',
@@ -1901,7 +1908,7 @@ function applyLang() {
   if (selectedIl) selectIl(selectedIl);
 }
 function setLang(l) {
-  LANG = l;
+  LANG = l; document.documentElement.lang = l;
   try { localStorage.setItem('lang', l); } catch (e) {}
   applyLang();
   const hsh = (location.hash || '').slice(1); if (['mig','prot','about','team','future','contact'].includes(hsh)) setTab(hsh);
@@ -2001,7 +2008,33 @@ function resetMap() {
   applySpeciesFilter('');
   resetView();
 }
+function hideXC() {
+  const g = document.getElementById('xc-layer'); if (g) g.innerHTML = '';
+  const lg = document.getElementById('xc-legend'); if (lg) lg.textContent = '';
+}
+function showXC(key) {
+  hideXC();
+  if (!key || !audioOn) return;
+  const g = document.getElementById('xc-layer'); if (!g) return;
+  const sp = speciesData.speciesList.find(x => x.key === key); if (!sp) return;
+  const xs = sp.xs || {}, pts = sp.xp || [], pc = speciesData.presentCounts[key] || {};
+  const NS = 'http://www.w3.org/2000/svg';
+  document.querySelectorAll('#turkey-svg .il').forEach(p => {
+    const il = p.getAttribute('data-il');
+    const has = xs[il] > 0, seen = pc[il] > 0;
+    if (!has && !seen) return;
+    const c = document.createElementNS(NS, 'path'); c.setAttribute('d', p.getAttribute('d'));
+    c.setAttribute('class', has ? 'xc-has' : 'xc-sil'); g.appendChild(c);
+  });
+  pts.forEach(q => { const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', mx(q[0]).toFixed(1)); c.setAttribute('cy', my(q[1]).toFixed(1)); c.setAttribute("r", 3.4);
+    c.setAttribute('class', 'xc-dot'); g.appendChild(c); });
+  const lg = document.getElementById('xc-legend');
+  if (lg) lg.textContent = pts.length ? t('xc_legend') : t('xc_none');
+}
+
 function stopTravel() {
+  hideXC();
   if (travelInterval) clearInterval(travelInterval);
   travelInterval = null;
   document.querySelectorAll('#turkey-svg .il.now').forEach(p => p.classList.remove('now'));
@@ -2013,6 +2046,8 @@ function startTravel(counts, maxCount, key) {
   stopTravel();
   if (audioOn) { stopBird(); if (key) birdStart(key); } else stopBird();
   buildProfile(counts, maxCount, key);
+  showXC(key);
+  const xsNow = ((speciesData.speciesList.find(x => x.key === key) || {}).xs) || {};
   travelIdx = 0;
   const bars = document.querySelectorAll('#species-waveform .sbar');
   const paths = {};
@@ -2025,7 +2060,7 @@ function startTravel(counts, maxCount, key) {
     if (paths[il]) paths[il].classList.add('now');
     if (bars[i]) bars[i].classList.add('cur');
     const c = counts[il] || 0;
-    now.textContent = '→ ' + il + ' · ' + (c ? t('now_rec', fmt(c)) : t('now_none'));
+    now.textContent = '→ ' + il + ' · ' + (c ? t('now_rec', fmt(c)) : t('now_none')) + (key && audioOn ? ' · ' + t('now_xc', xsNow[il] || 0) : '');
     if (birdAudio) birdLevel(levels[i]); else playTone(levels[i]);
     travelIdx++;
   }, 190);
@@ -2045,16 +2080,17 @@ function toggleListen() {
   const btn = document.getElementById('listen-btn');
   btn.classList.toggle('on', audioOn);
   btn.textContent = audioOn ? t('stop') : t('listen');
-  if (!audioOn) stopBird();
+  if (!audioOn) { stopBird(); hideXC(); }
   if (audioOn) {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const [c, m] = currentCounts();
     startTravel(c, m, selectedSpecies);
-  } else if (!selectedSpecies) {
+  } else {
     stopBird();
     stopTravel();
-    document.getElementById('species-waveform').innerHTML = '';
+    if (selectedSpecies) { const [c, m] = currentCounts(); buildProfile(c, m, selectedSpecies); }
+    else document.getElementById('species-waveform').innerHTML = '';
   }
 }
 
@@ -2096,7 +2132,9 @@ function applySpeciesFilter(key) {
 
   const meta = speciesData.speciesList.find(s => s.key === key);
   renderLabel();
-  startTravel(counts, maxCount, key);
+  stopTravel(); stopBird();
+  if (audioOn) startTravel(counts, maxCount, key);   // hareket/ses sadece 'Dinle' açıkken
+  else buildProfile(counts, maxCount, key);          // kapalıyken sadece sabit profil çubukları
   if (selectedIl) selectIl(selectedIl);
 }
 
@@ -2592,6 +2630,15 @@ const V13T = {
   tr: { card_audio:'Ses kaydı' }, en: { card_audio:'Recording' }, fr: { card_audio:'Enregistrement' }, es: { card_audio:'Grabación' }, de: { card_audio:'Aufnahme' }
 };
 ['en','tr','fr','es','de'].forEach(l => Object.assign(T[l], V13T[l]));
+
+const V14T = {
+  tr: { now_xc:n=>n+' ses kaydı', xc_legend:'● ses kaydının alındığı yer · çizgili: gözlem var, ses kaydı yok', xc_none:'Bu tür için Xeno-canto kaydı yok: ses sessizliği' },
+  en: { now_xc:n=>n+' sound recordings', xc_legend:'● where it was recorded · hatched: observed, never recorded', xc_none:'No Xeno-canto recording for this species: sound silence' },
+  fr: { now_xc:n=>n+' enregistrements sonores', xc_legend:"● lieu d'enregistrement · hachuré : observé, jamais enregistré", xc_none:'Aucun enregistrement Xeno-canto pour cette espèce : silence sonore' },
+  es: { now_xc:n=>n+' grabaciones de sonido', xc_legend:'● lugar de grabación · rayado: observada, nunca grabada', xc_none:'Sin grabaciones en Xeno-canto para esta especie: silencio sonoro' },
+  de: { now_xc:n=>n+' Tonaufnahmen', xc_legend:'● Aufnahmeort · schraffiert: beobachtet, nie aufgenommen', xc_none:'Keine Xeno-canto-Aufnahme für diese Art: Klangstille' }
+};
+['en','tr','fr','es','de'].forEach(l => Object.assign(T[l], V14T[l]));
 
 document.addEventListener('DOMContentLoaded', () => {
   initMap();
