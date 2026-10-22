@@ -257,6 +257,16 @@ def main():
             "pop": int(g("tahmini_nufus")) if g("tahmini_nufus") is not None else None,
             "nb": nb[il],
         }
+    sil_path = PROCESSED_DIR / "il_silence.csv"      # compute_silence_index.py çıktısı (opsiyonel)
+    if sil_path.exists():
+        sdf = pd.read_csv(sil_path, encoding="utf-8-sig")
+        for r_ in sdf.itertuples():
+            if r_.il_adi in stats:
+                stats[r_.il_adi]["sil"] = int(r_.sessizlik_endeksi)
+                stats[r_.il_adi]["exp"] = int(r_.beklenen_kayit)
+        print(f"Sessizlik endeksi: {len(sdf)} il için eklendi.")
+    else:
+        print("NOT: il_silence.csv yok — sessizlik endeksi çıkmayacak (python compute_silence_index.py).")
     for rank, il in enumerate(sorted(stats, key=lambda k: -stats[k]["records"]), 1):
         stats[il]["rank"] = rank
 

@@ -1015,6 +1015,9 @@ body.touring #tour-cap{opacity:1}
 .xc-has{fill:none;stroke:#ffd166;stroke-width:1.3;pointer-events:none}
 .xc-dot{fill:#ffd166;stroke:#10160f;stroke-width:.6;pointer-events:none;animation:xcp 1.6s ease-in-out infinite}
 @keyframes xcp{0%,100%{opacity:.95}50%{opacity:.45}}
+.why-list{margin:.4rem 0 1rem;padding-left:1.2rem}.why-list li{margin:.45rem 0}.why-list b{color:var(--ink);font-weight:400}
+.why-cta{display:inline-block;margin-top:.5rem;font-family:"Space Mono",monospace;font-size:.8rem;color:var(--accent,#9be37a);cursor:pointer;text-decoration:underline}
+.thanks-h{margin:2rem 0 .8rem;font-weight:400;font-size:1.05rem;line-height:1.5}.thanks-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem}.thanks-list .tcard{padding:.9rem 1rem}.thanks-list a{color:inherit;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1040,6 +1043,7 @@ body.touring #tour-cap{opacity:1}
   <button data-tab="map" class="on" onclick="setTab('map')" data-i18n="tab_map"></button>
   <button data-tab="mig" onclick="setTab('mig')" data-i18n="tab_mig"></button>
   <button data-tab="prot" onclick="setTab('prot')" data-i18n="tab_prot"></button>
+  <button data-tab="why" onclick="setTab('why')" data-i18n="tab_why"></button>
   <button data-tab="about" onclick="setTab('about')" data-i18n="tab_about"></button>
   <button data-tab="team" onclick="setTab('team')" data-i18n="tab_team"></button>
   <button data-tab="future" onclick="setTab('future')" data-i18n="tab_future"></button>
@@ -1201,6 +1205,11 @@ body.touring #tour-cap{opacity:1}
   <div class="about" id="prot-text"></div>
 </section>
 
+<section class="page about" id="tab-why" hidden>
+  <h2 data-i18n="why_h"></h2>
+  <div id="why-body"></div>
+</section>
+
 <section class="page about" id="tab-about" hidden>
   <h2 data-i18n="about_h"></h2>
   <div id="about-body"></div>
@@ -1210,6 +1219,8 @@ body.touring #tour-cap{opacity:1}
   <h2 data-i18n="team_h"></h2>
   <p class="lede" data-i18n="team_intro"></p>
   <div class="team-grid" id="team-grid"></div>
+  <h3 class="thanks-h" id="thanks-h"></h3>
+  <div class="thanks-list" id="thanks-grid"></div>
   <p class="fine" data-i18n="team_more"></p>
 </section>
 
@@ -1286,7 +1297,7 @@ try { const s = localStorage.getItem('lang'); if (['en','tr','fr','es','de'].inc
 const WARN = 'color:#b8893c';
 const T = {
  en: {
-  eyebrow:'MozFest 2026 · Wilding Creativity',
+  eyebrow:'MozFest 2026 · Wilding Creativity · Concept Prototype',
   subtitle:'Ecological Ghosts · Citizen Science · Data Silence',
   instr:'↗ Click a province · or choose a bird below',
   hint:"Brighter = more records per km². Click a province to see what was recorded, and what probably wasn't.",
@@ -1295,7 +1306,7 @@ const T = {
   readnote:'<b>How to read this:</b> brightness = GBIF records per 100 km² (2010–2026; eBird feeds GBIF), log scale. Pick a bird: green = recorded; <span style="'+WARN+'">amber = no record here, but a neighbouring province has one (possibly unrecorded, not necessarily absent)</span>; dark = no record nearby. Records reflect where observers go, not only where birds are. ♪ LISTEN: each province is a tone, higher = more records; no record = silence.',
   placeholder:'Click a province.<br><br>Some places are loud with observation. Others hold ecological ghosts: species that are probably there, but were never recorded.<br><br><em>The silence is not absence.<br>It is a record of what was never counted.</em>',
   quote:"<em>What gets measured gets protected. What doesn't — doesn't.</em>",
-  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'CONCEPT PROTOTYPE · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Data: GBIF (incl. eBird, iNaturalist) · eBird · WorldPop · EltonTraits (names)',
   d_lo:'few records', d_hi:'many records per km² (log)',
   l_rec:n=>'Recorded ('+n+')', l_ghost:n=>'Not recorded, neighbour has it ('+n+')', l_none:n=>'No record nearby ('+n+')',
@@ -1307,7 +1318,7 @@ const T = {
   now_none:'no record', now_rec:c=>c+' records', national:n=>n+' records nationwide', recs:'records', loc:'en-GB'
  },
  tr: {
-  eyebrow:'MozFest 2026 · WILDING CREATIVITY ',
+  eyebrow:'MozFest 2026 · Wilding Creativity · Konsept Prototipi',
   subtitle:'Ekolojik Hayaletler · Vatandaş Bilimi · Veri Sessizliği',
   instr:'↗ Bir ile tıkla · ya da aşağıdan bir kuş seç',
   hint:'Daha parlak = km² başına daha fazla kayıt. Bir ile tıkla: nelerin kaydedildiğini, nelerin muhtemelen kaydedilmediğini gör.',
@@ -1316,7 +1327,7 @@ const T = {
   readnote:'<b>Nasıl okunur:</b> parlaklık = 100 km² başına GBIF kaydı (2010–2026; eBird GBIF\'e akar), log ölçek. Bir kuş seçince: yeşil = kayıtlı; <span style="'+WARN+'">kehribar = burada kayıt yok ama komşu ilde var (belki kaydedilmemiş, mutlaka yok demek değil)</span>; koyu = yakında da kayıt yok. Kayıtlar yalnızca kuşların nerede olduğunu değil, gözlemcilerin nereye gittiğini de yansıtır. ♪ DİNLE: her il bir ton, yükseklik = kayıt sayısı; kayıt yoksa sessizlik.',
   placeholder:'Bir ile tıkla.<br><br>Bazı yerler gözlemle gürültülüdür. Bazıları ekolojik hayaletler barındırır: muhtemelen orada olan ama hiç kaydedilmemiş türler.<br><br><em>Sessizlik yokluk değildir.<br>Sayılmamış olanın kaydıdır.</em>',
   quote:'<em>Ölçülen korunur. Ölçülmeyen — korunmaz.</em>',
-  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'KONSEPT PROTOTİPİ · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Veri: GBIF (eBird ve iNaturalist dahil) · eBird · WorldPop · EltonTraits (isimler)',
   d_lo:'az kayıt', d_hi:'km² başına çok kayıt (log)',
   l_rec:n=>'Kayıtlı ('+n+')', l_ghost:n=>'Kayıt yok, komşuda var ('+n+')', l_none:n=>'Yakında da kayıt yok ('+n+')',
@@ -1383,11 +1394,11 @@ const PAGES = {
   fut_h:'Future work: what we imagine', fut_intro:'This is a first prototype. Here is where it could go, and what it would take.',
   fut_items:[
    ['Seasonal silence','Month-by-month records show which provinces fall quiet while migration passes through.'],
+   ['Hearing the data','Real sound recordings (e.g. Xeno-canto) reveal where birds are heard but never logged.'],
    ['Food webs','Compare bird records with the insects and plants a species depends on: expected, but absent.'],
    ['Range maps','Expert range maps or modelled occurrence could separate "not there" from "not recorded".'],
    ['Why places are silent','Roads, population and protected areas as layers of access, to test the infrastructure argument.'],
-   ['Local names, local knowledge', 'Common names in local languages, and records and stories from observers that never reach global databases.'],
-   ['International Collaboration', 'We want to turn this an global map that we can review and show the effect of citizen science.']],
+   ['Local names, local knowledge','Common names in local languages, and records and stories from observers that never reach global databases.']],
   need_h:'What we need',
   needs:['Access to the eBird Basic Dataset and species range maps','Ornithologists to review the "recorded next door" layer','Local observers to tell us where they never go, and why','Translators and proofreaders','Support for a touchscreen setup at MozFest Barcelona'],
   fut_cta:'Help us: get in touch',
@@ -1404,11 +1415,11 @@ const PAGES = {
   fut_h:'Gelecek çalışmalar: neler hayal ediyoruz', fut_intro:'Bu ilk bir prototip. Nereye gidebileceği ve bunun için neye ihtiyaç olduğu aşağıda.',
   fut_items:[
    ['Mevsimsel sessizlik','Ay ay kayıtlar, göç geçerken hangi illerin sessizleştiğini gösterir.'],
+   ['Veriyi duymak','Gerçek ses kayıtları (ör. Xeno-canto), kuşların nerede duyulup hiç kaydedilmediğini ortaya çıkarır.'],
    ['Besin ağları','Kuş kayıtlarını türün bağımlı olduğu böcek ve bitkilerle karşılaştırmak: beklenen ama yok.'],
    ['Yayılış haritaları','Uzman yayılış haritaları ya da modellenmiş bulunma, "orada yok" ile "kaydedilmemiş"i ayırabilir.'],
    ['Yerler neden sessiz','Yollar, nüfus ve korunan alanlar erişim katmanları olarak, altyapı argümanını sınamak için.'],
-   ['Yerel adlar, yerel bilgi', 'Yerel dillerdeki adlar ve küresel veri tabanlarına hiç ulaşmayan gözlemci kayıtları ve hikâyeleri.']
-   ['Uluslararası İşbirliği', 'Bunu, inceleyebileceğimiz ve yurttaş biliminin etkisini gösterebileceğimiz küresel bir haritaya dönüştürmek istiyoruz.']],
+   ['Yerel adlar, yerel bilgi','Yerel dillerdeki adlar ve küresel veri tabanlarına hiç ulaşmayan gözlemci kayıtları ve hikâyeleri.']],
   need_h:'Neye ihtiyacımız var',
   needs:['eBird Basic Dataset ve tür yayılış haritalarına erişim','"Komşuda kayıtlı" katmanını inceleyecek ornitologlar','Nereye hiç gitmediklerini ve nedenini anlatacak yerel gözlemciler','Çevirmenler ve redaktörler','MozFest Barcelona\'da dokunmatik ekran kurulumu için destek'],
   fut_cta:'Destek ol: bize yaz',
@@ -1425,11 +1436,11 @@ const PAGES = {
   fut_h:'Perspectives : ce que nous imaginons', fut_intro:"Ceci est un premier prototype. Voici où il pourrait aller, et ce qu'il faudrait pour y arriver.",
   fut_items:[
    ['Silence saisonnier',"Les enregistrements mois par mois montrent quelles provinces se taisent au passage de la migration."],
+   ['Entendre les données',"De vrais enregistrements sonores (p. ex. Xeno-canto) révèlent où les oiseaux sont entendus mais jamais notés."],
    ['Réseaux trophiques',"Comparer les observations d'oiseaux aux insectes et plantes dont une espèce dépend : attendue, mais absente."],
    ['Cartes de répartition','Des cartes de répartition expertes ou une présence modélisée pourraient distinguer « pas là » de « non enregistré ».'],
    ['Pourquoi ces lieux se taisent',"Routes, population et aires protégées comme couches d'accessibilité, pour tester l'argument de l'infrastructure."],
-   ['Noms locaux, savoirs locaux', "Noms dans les langues locales, et observations et récits d'observateurs qui n'atteignent jamais les bases mondiales."],
-   ['Collaboration internationale', 'Nous voulons en faire une carte mondiale que nous pourrons examiner et qui permettra de montrer l’impact de la science citoyenne.']     ],
+   ['Noms locaux, savoirs locaux',"Noms dans les langues locales, et observations et récits d'observateurs qui n'atteignent jamais les bases mondiales."]],
   need_h:"Ce dont nous avons besoin",
   needs:["Accès à l'eBird Basic Dataset et aux cartes de répartition des espèces",'Des ornithologues pour relire la couche « enregistré à côté »',"Des observateurs locaux pour nous dire où ils ne vont jamais, et pourquoi",'Des traducteurs et relecteurs',"Un soutien pour un dispositif tactile à MozFest Barcelone"],
   fut_cta:'Aide-nous : écris-nous',
@@ -1496,9 +1507,9 @@ const FUT = {
   tags:['Next','Then','Global'],
   fut_items:[
    [1,'Seasonal silence and migration','Month-by-month records, and flyways that cross borders: which places fall quiet exactly when millions of birds pass through.'],
-   [1,'Hearing the data','Real recordings (Xeno-canto, community recorders, bioacoustic sensors) set against written records: where birds are heard but never logged.'],
+   [1,'Hearing the data','Xeno-canto is already on the map. Next: community recorders and bioacoustic sensors, to find more places where birds are heard but never logged.'],
    [1,'Expected, but absent','Food webs, habitat and range maps together, so "probably here, never recorded" becomes a measured signal instead of a guess.'],
-   [2,'Why places are silent','Roads, population, protected areas, night lights, language and internet access, to test the infrastructure argument statistically.'],
+   [2,'Why places are silent','Population and area are already in the silence index. Next: roads, night lights, language, internet access and the number of distinct observers, to test the infrastructure argument more fully.'],
    [2,'Beyond birds','Insects, plants, fungi, mammals: every group has its own silence, and they rarely fall in the same places.'],
    [2,'Local voices','Names in local languages, and the knowledge of observers whose records never reach global databases. Let people add where they do not go, and why.'],
    [3,'An atlas of silence for every country','An open pipeline and template: point it at any country or region and get its map of recorded and unrecorded life. Compare silences across the world.'],
@@ -1514,9 +1525,9 @@ const FUT = {
   tags:['Sıradaki','Sonra','Küresel'],
   fut_items:[
    [1,'Mevsimsel sessizlik ve göç','Ay ay kayıtlar ve sınırları aşan göç yolları: milyonlarca kuş geçerken tam olarak hangi yerler sessizleşiyor.'],
-   [1,'Veriyi duymak','Gerçek ses kayıtları (Xeno-canto, topluluk kayıtçıları, biyoakustik sensörler) yazılı kayıtlarla yan yana: kuşların duyulup hiç kaydedilmediği yerler.'],
+   [1,'Veriyi duymak','Xeno-canto haritada zaten var. Sırada topluluk kayıtçıları ve biyoakustik sensörler var: kuşların duyulup hiç kaydedilmediği daha fazla yeri bulmak için.'],
    [1,'Beklenen ama yok','Besin ağı, habitat ve yayılış haritaları birlikte: "muhtemelen burada, hiç kaydedilmemiş" bir tahmin olmaktan çıkıp ölçülmüş bir sinyale dönüşür.'],
-   [2,'Yerler neden sessiz','Yollar, nüfus, korunan alanlar, gece ışıkları, dil ve internet erişimi: altyapı argümanını istatistiksel olarak sınamak için.'],
+   [2,'Yerler neden sessiz','Nüfus ve yüzölçümü sessizlik endeksinde zaten var. Sırada yollar, gece ışıkları, dil, internet erişimi ve farklı gözlemci sayısı var: altyapı argümanını daha kapsamlı sınamak için.'],
    [2,'Kuşların ötesi','Böcekler, bitkiler, mantarlar, memeliler: her grubun kendi sessizliği var ve nadiren aynı yerlere düşüyor.'],
    [2,'Yerel sesler','Yerel dillerdeki adlar ve kayıtları küresel veri tabanlarına hiç ulaşmayan gözlemcilerin bilgisi. İnsanlar nereye gitmediklerini ve nedenini ekleyebilsin.'],
    [3,'Her ülke için bir sessizlik atlası','Açık bir veri hattı ve şablon: herhangi bir ülkeye ya da bölgeye çevir, kayıtlı ve kayıtsız yaşamın haritasını al. Dünyanın sessizliklerini karşılaştır.'],
@@ -1532,9 +1543,9 @@ const FUT = {
   tags:['Ensuite','Puis','Mondial'],
   fut_items:[
    [1,'Silence saisonnier et migration',"Enregistrements mois par mois et voies migratoires qui traversent les frontières : quels lieux se taisent précisément quand des millions d'oiseaux passent."],
-   [1,'Entendre les données',"De vrais enregistrements (Xeno-canto, enregistreurs citoyens, capteurs bioacoustiques) face aux observations écrites : où les oiseaux sont entendus mais jamais notés."],
+   [1,'Entendre les données',"Xeno-canto est déjà sur la carte. Prochaine étape : enregistreurs citoyens et capteurs bioacoustiques, pour trouver plus de lieux où les oiseaux sont entendus mais jamais notés."],
    [1,'Attendue, mais absente',"Réseaux trophiques, habitat et cartes de répartition réunis, pour que « probablement ici, jamais enregistré » devienne un signal mesuré plutôt qu'une supposition."],
-   [2,'Pourquoi ces lieux se taisent',"Routes, population, aires protégées, lumières nocturnes, langue et accès à internet, pour tester statistiquement l'argument de l'infrastructure."],
+   [2,'Pourquoi ces lieux se taisent',"La population et la superficie sont déjà dans l'indice de silence. Prochaine étape : routes, lumières nocturnes, langue, accès à internet et nombre d'observateurs distincts, pour tester plus complètement l'argument de l'infrastructure."],
    [2,'Au-delà des oiseaux',"Insectes, plantes, champignons, mammifères : chaque groupe a son propre silence, et ils tombent rarement aux mêmes endroits."],
    [2,'Voix locales',"Noms dans les langues locales, et savoirs d'observateurs dont les données n'atteignent jamais les bases mondiales. Permettre à chacun d'ajouter où il ne va pas, et pourquoi."],
    [3,'Un atlas du silence pour chaque pays',"Un pipeline et un modèle ouverts : pointe-les vers n'importe quel pays ou région et obtiens sa carte du vivant enregistré et non enregistré. Compare les silences du monde."],
@@ -1550,9 +1561,9 @@ const FUT = {
   tags:['Siguiente','Después','Global'],
   fut_items:[
    [1,'Silencio estacional y migración','Registros mes a mes y rutas migratorias que cruzan fronteras: qué lugares enmudecen justo cuando pasan millones de aves.'],
-   [1,'Escuchar los datos','Grabaciones reales (Xeno-canto, grabadoras ciudadanas, sensores bioacústicos) frente a los registros escritos: dónde se oyen aves que nunca se anotan.'],
+   [1,'Escuchar los datos','Xeno-canto ya está en el mapa. Lo siguiente: grabadoras ciudadanas y sensores bioacústicos, para encontrar más lugares donde se oyen aves que nunca se anotan.'],
    [1,'Esperada, pero ausente','Redes tróficas, hábitat y mapas de distribución juntos, para que «probablemente aquí, nunca registrada» pase de suposición a señal medida.'],
-   [2,'Por qué callan los lugares','Carreteras, población, áreas protegidas, luces nocturnas, idioma y acceso a internet, para contrastar estadísticamente el argumento de la infraestructura.'],
+   [2,'Por qué callan los lugares','La población y la superficie ya están en el índice de silencio. Lo siguiente: carreteras, luces nocturnas, idioma, acceso a internet y número de observadores distintos, para contrastar más a fondo el argumento de la infraestructura.'],
    [2,'Más allá de las aves','Insectos, plantas, hongos, mamíferos: cada grupo tiene su propio silencio, y rara vez caen en los mismos lugares.'],
    [2,'Voces locales','Nombres en lenguas locales y el conocimiento de observadores cuyos registros nunca llegan a las bases globales. Que cada persona pueda añadir adónde no va, y por qué.'],
    [3,'Un atlas del silencio para cada país','Un flujo de datos y una plantilla abiertos: apúntalos a cualquier país o región y obtén su mapa de vida registrada y no registrada. Compara los silencios del mundo.'],
@@ -1586,10 +1597,23 @@ const BIO = {
  fr:"Chercheuse à l'intersection de l'IA climatique, de l'observation de la Terre et du calcul scientifique. Master en science et ingénierie computationnelles, Université de Boğaziçi. S'intéresse à l'apprentissage automatique spatio-temporel, à l'explicabilité et à des approches responsables et féministes de l'IA. Vit à Istanbul.",
  es:'Investigadora en la intersección de la IA climática, la observación de la Tierra y la computación científica. Máster en Ciencia e Ingeniería Computacional, Universidad de Boğaziçi. Le interesan el aprendizaje automático espaciotemporal, la explicabilidad y enfoques responsables y feministas de la IA. Vive en Estambul.'
 };
-// team: add people here. photo = path (e.g. 'team/ece.jpg') or a data: URI; if missing, initials are shown.
+// team: add people here. photo = path (e.g. 'team/ece.jpeg') or a data: URI; if missing, initials are shown.
 const TEAM = [
-  { name:'Ece Özen İldem', role:'team_role', photo:'team/ece.jpg', bio:BIO, links:[{label:'LinkedIn', url:'https://www.linkedin.com/in/eceozen'}] }
+  { name:'Ece Özen İldem', role:'team_role', photo:'team/ece.jpeg', bio:BIO, links:[{label:'LinkedIn', url:'https://www.linkedin.com/in/eceozen'}] }
 ];
+// THANKS: the three women who helped shape the idea (no photos). Fill url/role; empty ones are hidden.
+const THANKS = [
+  { name:'Gülçin Yıldırım Jelínek', role:{tr:'Ürün · ClickHouse PostgreSQL Ekibi',en:'Product, ClickHouse PostgreSQL Team',fr:"Produit · équipe ClickHouse PostgreSQL",es:'Producto · equipo ClickHouse PostgreSQL',de:'Produkt · ClickHouse-PostgreSQL-Team'}, url:'https://www.linkedin.com/in/gulcinyildirim/' },
+  { name:'Aslı Karataş', role:{tr:'Toplumsal cinsiyet eşitliği uzmanı · Sebuka platformu kurucusu · Avukat',en:'Gender equality expert · Founder of the Sebuka platform · Lawyer',fr:"Experte en égalité de genre · Fondatrice de la plateforme Sebuka · Avocate",es:'Experta en igualdad de género · Fundadora de la plataforma Sebuka · Abogada',de:'Expertin für Geschlechtergerechtigkeit · Gründerin der Plattform Sebuka · Anwältin'}, url:'https://www.linkedin.com/in/asl%C4%B1-karata%C5%9F-a519b2a2/' },
+  { name:'Ece Paralı Öztan, Ph.D', role:{tr:'Siyaset bilimi doçenti · Kıdemli danışman · Toplumsal cinsiyet eşitliği, kesişimsellik ve çeşitlilik-eşitlik-kapsayıcılık uzmanı',en:'Associate Professor of Political Science · Senior Consultant · Expert in Gender Equality, Intersectionality and DEI',fr:"Professeure associée de science politique · Consultante senior · Experte en égalité de genre, intersectionnalité et DEI",es:'Profesora asociada de ciencia política · Consultora sénior · Experta en igualdad de género, interseccionalidad y DEI',de:'Außerordentliche Professorin für Politikwissenschaft · Senior-Beraterin · Expertin für Geschlechtergerechtigkeit, Intersektionalität und DEI'}, url:'https://www.linkedin.com/in/ece-oztan/' }
+];
+const THANKS_T = {
+  tr:'Bu proje MozFest’e giden yolda üç kadının desteğiyle şekillendi:',
+  en:'This project took shape on the road to MozFest with the support of three women:',
+  fr:'Ce projet a pris forme sur la route de MozFest grâce au soutien de trois femmes :',
+  es:'Este proyecto tomó forma en el camino hacia MozFest con el apoyo de tres mujeres:',
+  de:'Dieses Projekt hat auf dem Weg zum MozFest mit der Unterstützung von drei Frauen Gestalt angenommen:'
+};
 const initials = n => n.split(/\s+/).filter(Boolean).slice(0,2).map(s => s[0]).join('').toUpperCase();
 function avatar(m, cls) {
   const wrap = document.createElement('span'); wrap.style.display = 'contents';
@@ -1744,7 +1768,7 @@ function renderMig() {
 }
 
 function setTab(name) {
-  ['map','mig','prot','about','team','future','contact'].forEach(n => {
+  ['map','mig','prot','why','about','team','future','contact'].forEach(n => {
     document.getElementById('tab-' + n).hidden = (n !== name);
   });
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
@@ -1763,6 +1787,14 @@ function renderPages() {
     c.onclick = () => openMember(i);
     c.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMember(i); } };
     grid.appendChild(c);
+  });
+  document.getElementById('thanks-h').textContent = THANKS_T[LANG] || THANKS_T.en;
+  const tg = document.getElementById('thanks-grid'); tg.innerHTML = '';
+  THANKS.forEach(m => {
+    const c = document.createElement('div'); c.className = 'tcard';
+    const nm = m.url ? '<a href="' + esc(m.url) + '" target="_blank" rel="noopener">' + esc(m.name) + ' ↗</a>' : esc(m.name);
+    c.innerHTML = '<span class="tx"><b>' + nm + '</b>' + (m.role ? '<span>' + esc(typeof m.role === 'object' ? (m.role[LANG] || m.role.en) : m.role) + '</span>' : '') + '</span>';
+    tg.appendChild(c);
   });
   document.getElementById('fut-list').innerHTML = t('fut_items').map(i =>
     '<div class="fut-item"><span class="tag t' + i[0] + '">' + t('tags')[i[0] - 1] + '</span><b>' + i[1] + '</b><span>' + i[2] + '</span></div>').join('');
@@ -1902,7 +1934,7 @@ function applyLang() {
   document.documentElement.lang = LANG;
   document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n')); });
   document.querySelectorAll('.lang-switch button').forEach(b => b.classList.toggle('on', b.dataset.lang === LANG));
-  renderPages(); renderMig(); renderAbout(); renderIntro(); renderProt();
+  renderPages(); renderMig(); renderAbout(); renderIntro(); renderProt(); renderWhy();
   document.getElementById('listen-btn').textContent = audioOn ? t('stop') : t('listen');
   buildDropdown(); renderLegend(); renderLabel();
   if (selectedIl) selectIl(selectedIl);
@@ -1911,7 +1943,7 @@ function setLang(l) {
   LANG = l; document.documentElement.lang = l;
   try { localStorage.setItem('lang', l); } catch (e) {}
   applyLang();
-  const hsh = (location.hash || '').slice(1); if (['mig','prot','about','team','future','contact'].includes(hsh)) setTab(hsh);
+  const hsh = (location.hash || '').slice(1); if (['mig','prot','why','about','team','future','contact'].includes(hsh)) setTab(hsh);
 }
 let selectedIl = null;
 
@@ -1934,7 +1966,9 @@ function selectIl(name) {
       <div class="il-kpi"><b>${birds}<small style="font-size:.9rem"> / ${total}</small></b><span>${t('k_birds')}</span></div>
       <div class="il-kpi"><b>${s.ebird ?? '—'}</b><span>${t('k_ebird')}</span></div>
       <div class="il-kpi"><b>${popd}</b><span>${t('k_pop')}</span></div>
+      ${s.sil != null ? `<div class="il-kpi"><b>${s.sil}<small style="font-size:.9rem"> / 100</small></b><span>${t('k_sil')}</span></div>` : ''}
     </div>
+    ${s.sil != null ? `<div class="species-note" style="margin:.4rem 0 .8rem">${t('sil_note', fmt(s.exp), fmt(s.records))}${s.sil >= 80 ? ' <b>' + t('sil_prio') + '</b> <span class="why-cta" onclick="setTab(\'why\')">' + t('sil_why') + '</span>' : ''}</div>` : ''}
     <div class="species-box">
       <div class="species-title">${t('g_title')}</div>
       <div class="ghost-note">${t('g_note', ghosts.length, total, s.nb.join(', '))}</div>
@@ -2419,7 +2453,7 @@ function initIntro() {
     bg.appendChild(c);
   });
   const q = new URLSearchParams(location.search), hsh = (location.hash || '').slice(1);
-  if (q.has('nointro') || ['mig','prot','about','team','future','contact'].includes(hsh)) document.getElementById('intro').remove();
+  if (q.has('nointro') || ['mig','prot','why','about','team','future','contact'].includes(hsh)) document.getElementById('intro').remove();
 }
 function renderIntro() {
   document.querySelectorAll('#intro .lg button').forEach(b => b.classList.toggle('on', b.dataset.lang === LANG));
@@ -2540,9 +2574,9 @@ T.de = {
   fut_h:'Ausblick: Wohin das führt', fut_intro:'Der Prototyp für Türkiye ist das erste Kapitel. Das ist der Plan, in der Reihenfolge, in der wir ihn erwarten.',
   fut_items:[
     [1,'Saisonale Stille und Vogelzug','Monatsgenaue Meldungen und Zugrouten, die Grenzen überqueren: Welche Orte werden genau dann still, wenn Millionen Vögel durchziehen?'],
-    [1,'Die Daten hören','Echte Aufnahmen (Xeno-canto, Community-Rekorder, bioakustische Sensoren) neben schriftlichen Meldungen: wo Vögel gehört, aber nie erfasst werden.'],
+    [1,'Die Daten hören','Xeno-canto ist schon auf der Karte. Als Nächstes: Community-Rekorder und bioakustische Sensoren, um mehr Orte zu finden, an denen Vögel gehört, aber nie erfasst werden.'],
     [1,'Erwartet, aber abwesend','Nahrungsnetze, Lebensraum- und Verbreitungskarten zusammen, damit „wahrscheinlich da, nie erfasst“ zu einem messbaren Signal statt zu einer Vermutung wird.'],
-    [2,'Warum Orte still sind','Straßen, Bevölkerung, Schutzgebiete, nächtliche Beleuchtung, Sprache und Internetzugang – um das Infrastruktur-Argument statistisch zu prüfen.'],
+    [2,'Warum Orte still sind','Bevölkerung und Fläche stecken schon im Schweigeindex. Als Nächstes: Straßen, nächtliche Beleuchtung, Sprache, Internetzugang und Zahl der verschiedenen Beobachtenden – um das Infrastruktur-Argument umfassender zu prüfen.'],
     [2,'Jenseits der Vögel','Insekten, Pflanzen, Pilze, Säugetiere: Jede Gruppe hat ihre eigene Stille, und sie fallen selten an denselben Orten an.'],
     [2,'Lokale Stimmen','Namen in lokalen Sprachen und das Wissen von Beobachtenden, deren Meldungen nie in globale Datenbanken gelangen. Menschen sollen ergänzen können, wohin sie nicht gehen, und warum.'],
     [3,'Ein Atlas der Stille für jedes Land','Eine offene Pipeline und Vorlage: auf jedes Land oder jede Region anwendbar, mit einer Karte des erfassten und unerfassten Lebens. Stille weltweit vergleichen.'],
@@ -2639,6 +2673,59 @@ const V14T = {
   de: { now_xc:n=>n+' Tonaufnahmen', xc_legend:'● Aufnahmeort · schraffiert: beobachtet, nie aufgenommen', xc_none:'Keine Xeno-canto-Aufnahme für diese Art: Klangstille' }
 };
 ['en','tr','fr','es','de'].forEach(l => Object.assign(T[l], V14T[l]));
+
+const V15T = {
+  tr: { k_sil:'sessizlik endeksi', sil_note:(e,r)=>'Nüfus ve yüzölçümüne göre yaklaşık '+e+' kayıt beklenirdi; '+r+' var. Endeks yüksekse kayıtlar beklenenin altında ve tür envanteri eksik.' },
+  en: { k_sil:'silence index', sil_note:(e,r)=>'Given population and area, about '+e+' records would be expected; there are '+r+'. A high index means fewer records than expected and an incomplete species inventory.' },
+  fr: { k_sil:'indice de silence', sil_note:(e,r)=>'Compte tenu de la population et de la superficie, environ '+e+' enregistrements seraient attendus ; il y en a '+r+'. Un indice élevé signifie moins de données que prévu et un inventaire incomplet.' },
+  es: { k_sil:'índice de silencio', sil_note:(e,r)=>'Dada la población y la superficie, se esperarían unos '+e+' registros; hay '+r+'. Un índice alto significa menos registros de los esperados y un inventario de especies incompleto.' },
+  de: { k_sil:'Schweigeindex', sil_note:(e,r)=>'Bei dieser Bevölkerung und Fläche wären etwa '+e+' Meldungen zu erwarten; es gibt '+r+'. Ein hoher Index bedeutet weniger Meldungen als erwartet und ein unvollständiges Artenspektrum.' }
+};
+['en','tr','fr','es','de'].forEach(l => Object.assign(T[l], V15T[l]));
+
+
+const WHY = {
+ tr:{ intro:'Sessizlik doğadan çok bakış çabasından gelir. Aşağıdakiler olası nedenler (hipotez); sessizlik endeksi bunların bir kısmını veriyle gösterir, geri kalanı için yerel bilgiye ihtiyaç var.',
+  ch:'Sessizlik neden var?', c:[['Az gözlemci','Kayıtları insanlar girer. Nüfusu az ya da kuş gözlemi kültürü yeni olan illerde kayıt da az olur.'],['Erişim','Arazi ve ulaşım koşulları yüzünden bazı alanlara çok az gidilir.'],['Platform ve alışkanlık','eBird ve iNaturalist kullanımı bölgeden bölgeye değişir. Birçok gözlem defterlerde ve gruplarda kalır, GBIF gibi açık veritabanlarına ulaşmaz.'],['Verinin açık olmaması','Bazı kayıtlar (örneğin korunan alan verisinin çoğu) herkese açık değil.'],['Ses için ek engel','Ses kaydı ekipman ve bilgi ister, Xeno-canto\'ya yükleme de ek bir adım. Bu yüzden ses verisi gözlem verisinden bile seyrek.']],
+  fh:'Ne yapılabilir?', f:[['Hedefli gözlem etkinlikleri','Sessizlik endeksi yüksek illerde kuş sayımı ve gözlem günleri düzenlemek.'],['Yerel gruplar ve eğitim','Üniversite, dernek ve yerel kuş gözlem gruplarıyla eBird ve iNaturalist atölyeleri yapmak.'],['Pasif akustik izleme','Otomatik ses kaydediciler bırakıp ses verisini artırmak.'],['Mevcut veriyi görünür kılmak','Defter, müze ve kurum arşivlerindeki kayıtları açık veritabanlarına aktarmak.']],
+  yh:'Sen ne yapabilirsin?', y:['eBird\'de tam liste gir: gördüğün her türü, süreyi ve mesafeyi yaz.','iNaturalist\'e fotoğraf ve konumla gözlem ekle.','Duyduğun kuşun sesini kaydedip Xeno-canto\'ya yükle.','Haritadaki sessiz bir ilde, ya da yakınında, bir gözlem günü planla.'],
+  note:'Bu sayfa bir yöntem önerisidir, kesin neden analizi değil.' },
+ en:{ intro:'Silence comes less from nature than from how much looking happens. These are possible causes (hypotheses); the silence index shows some of them with data, the rest needs local knowledge.',
+  ch:'Why is there silence?', c:[['Few observers','People enter the records. Provinces with fewer people, or a newer birdwatching culture, have fewer records.'],['Access','Terrain and transport conditions mean some areas are rarely visited.'],['Platforms and habits','eBird and iNaturalist use varies between regions. Many observations stay in notebooks and groups and never reach open databases like GBIF.'],['Closed data','Some records (for example most protected-area data) are not publicly available.'],['An extra barrier for sound','Recording needs equipment and know-how, and uploading to Xeno-canto is another step. That is why sound data is even sparser than observation data.']],
+  fh:'What can be done?', f:[['Targeted observation events','Organise bird counts and observation days in provinces with a high silence index.'],['Local groups and training','Run eBird and iNaturalist workshops with universities, associations and local birdwatching groups.'],['Passive acoustic monitoring','Leave automatic recorders to increase sound data.'],['Making existing data visible','Move records from notebooks, museums and institutional archives into open databases.']],
+  yh:'What can you do?', y:['Submit a complete checklist on eBird: every species you see, plus time and distance.','Add an observation with photo and location on iNaturalist.','Record the bird you hear and upload it to Xeno-canto.','Plan an observation day in, or near, a silent province on the map.'],
+  note:'This page is a proposal for a method, not a definitive analysis of causes.' },
+ fr:{ intro:'Le silence vient moins de la nature que de l\'effort d\'observation. Voici des causes possibles (hypothèses) ; l\'indice de silence en montre une partie avec des données, le reste demande une connaissance locale.',
+  ch:'Pourquoi ce silence ?', c:[['Peu d\'observateurs','Ce sont des personnes qui saisissent les données. Les provinces peu peuplées, ou où l\'ornithologie amateur est récente, ont moins d\'enregistrements.'],['Accès','Le relief et les conditions de transport font que certaines zones sont rarement visitées.'],['Plateformes et habitudes','L\'usage d\'eBird et d\'iNaturalist varie selon les régions. Beaucoup d\'observations restent dans des carnets et des groupes et n\'atteignent pas les bases ouvertes comme GBIF.'],['Données fermées','Certaines données (par exemple la plupart des aires protégées) ne sont pas publiques.'],['Un obstacle de plus pour le son','Enregistrer demande du matériel et du savoir-faire, et le dépôt sur Xeno-canto est une étape de plus. Les données sonores sont donc encore plus rares que les observations.']],
+  fh:'Que faire ?', f:[['Événements d\'observation ciblés','Organiser des comptages et des journées d\'observation dans les provinces à indice de silence élevé.'],['Groupes locaux et formation','Animer des ateliers eBird et iNaturalist avec des universités, associations et groupes locaux.'],['Surveillance acoustique passive','Installer des enregistreurs automatiques pour augmenter les données sonores.'],['Rendre visibles les données existantes','Verser dans des bases ouvertes les données des carnets, musées et archives institutionnelles.']],
+  yh:'Que pouvez-vous faire ?', y:['Saisir une liste complète sur eBird : toutes les espèces vues, la durée et la distance.','Ajouter une observation avec photo et localisation sur iNaturalist.','Enregistrer le chant d\'un oiseau et le déposer sur Xeno-canto.','Planifier une journée d\'observation dans une province silencieuse de la carte, ou près d\'elle.'],
+  note:'Cette page propose une méthode ; ce n\'est pas une analyse définitive des causes.' },
+ es:{ intro:'El silencio viene menos de la naturaleza que del esfuerzo de observación. Estas son posibles causas (hipótesis); el índice de silencio muestra algunas con datos y el resto requiere conocimiento local.',
+  ch:'¿Por qué hay silencio?', c:[['Pocos observadores','Los registros los introducen personas. Las provincias con menos población, o con una cultura de observación de aves más reciente, tienen menos registros.'],['Acceso','El terreno y las condiciones de transporte hacen que algunas zonas se visiten muy poco.'],['Plataformas y costumbres','El uso de eBird e iNaturalist varía entre regiones. Muchas observaciones se quedan en cuadernos y grupos y no llegan a bases abiertas como GBIF.'],['Datos cerrados','Algunos registros (por ejemplo la mayoría de los datos de áreas protegidas) no son públicos.'],['Un obstáculo más para el sonido','Grabar requiere equipo y conocimientos, y subir a Xeno-canto es un paso extra. Por eso los datos de sonido son aún más escasos que los de observación.']],
+  fh:'¿Qué se puede hacer?', f:[['Jornadas de observación dirigidas','Organizar conteos y jornadas de observación en provincias con un índice de silencio alto.'],['Grupos locales y formación','Hacer talleres de eBird e iNaturalist con universidades, asociaciones y grupos locales.'],['Monitoreo acústico pasivo','Dejar grabadoras automáticas para aumentar los datos de sonido.'],['Hacer visibles los datos existentes','Pasar registros de cuadernos, museos y archivos institucionales a bases de datos abiertas.']],
+  yh:'¿Qué puedes hacer tú?', y:['Envía una lista completa a eBird: cada especie que veas, más la duración y la distancia.','Añade una observación con foto y ubicación en iNaturalist.','Graba el ave que oyes y súbela a Xeno-canto.','Planifica una jornada de observación en una provincia silenciosa del mapa, o cerca de ella.'],
+  note:'Esta página propone un método; no es un análisis definitivo de las causas.' },
+ de:{ intro:'Stille entsteht weniger aus der Natur als aus dem Beobachtungsaufwand. Dies sind mögliche Ursachen (Hypothesen); der Schweigeindex zeigt einen Teil davon mit Daten, der Rest braucht lokales Wissen.',
+  ch:'Woher kommt die Stille?', c:[['Wenige Beobachter','Meldungen werden von Menschen eingegeben. Provinzen mit weniger Einwohnern oder einer jüngeren Vogelbeobachtungskultur haben weniger Meldungen.'],['Zugang','Gelände und Verkehrsbedingungen führen dazu, dass manche Gebiete selten besucht werden.'],['Plattformen und Gewohnheiten','Die Nutzung von eBird und iNaturalist unterscheidet sich je nach Region. Viele Beobachtungen bleiben in Notizbüchern und Gruppen und erreichen offene Datenbanken wie GBIF nie.'],['Geschlossene Daten','Manche Daten (z. B. die meisten Schutzgebietsdaten) sind nicht öffentlich.'],['Ein zusätzliches Hindernis beim Ton','Aufnahmen brauchen Ausrüstung und Know-how, und der Upload zu Xeno-canto ist ein weiterer Schritt. Deshalb sind Tondaten noch seltener als Beobachtungsdaten.']],
+  fh:'Was lässt sich tun?', f:[['Gezielte Beobachtungsaktionen','Zählungen und Beobachtungstage in Provinzen mit hohem Schweigeindex organisieren.'],['Lokale Gruppen und Schulung','eBird- und iNaturalist-Workshops mit Universitäten, Vereinen und lokalen Gruppen durchführen.'],['Passives akustisches Monitoring','Automatische Rekorder aufstellen, um Tondaten zu erhöhen.'],['Vorhandene Daten sichtbar machen','Meldungen aus Notizbüchern, Museen und Institutsarchiven in offene Datenbanken überführen.']],
+  yh:'Was kannst du tun?', y:['Gib auf eBird eine vollständige Liste ein: jede gesehene Art samt Dauer und Strecke.','Füge auf iNaturalist eine Beobachtung mit Foto und Standort hinzu.','Nimm den Vogel auf, den du hörst, und lade ihn auf Xeno-canto hoch.','Plane einen Beobachtungstag in oder nahe einer stillen Provinz auf der Karte.'],
+  note:'Diese Seite ist ein Methodenvorschlag, keine abschließende Ursachenanalyse.' }
+};
+function renderWhy() {
+  const el = document.getElementById('why-body'); if (!el) return;
+  const w = WHY[LANG] || WHY.en;
+  const li = a => '<ul class="why-list">' + a.map(x => '<li><b>' + x[0] + '.</b> ' + x[1] + '</li>').join('') + '</ul>';
+  el.innerHTML = '<p>' + w.intro + '</p><h3>' + w.ch + '</h3>' + li(w.c) + '<h3>' + w.fh + '</h3>' + li(w.f) +
+    '<h3>' + w.yh + '</h3><ul class="why-list">' + w.y.map(x => '<li>' + x + '</li>').join('') + '</ul><p class="fine">' + w.note + '</p>';
+}
+const V16T = {
+  tr: { tab_why:'Neden sessiz?', why_h:'Sessizliğin nedenleri ve ne yapılabilir', sil_prio:'Öncelikli il.', sil_why:'Neden ve ne yapılabilir →' },
+  en: { tab_why:'Why silent?', why_h:'Causes of silence and what can be done', sil_prio:'Priority province.', sil_why:'Why, and what can be done →' },
+  fr: { tab_why:'Pourquoi ce silence ?', why_h:'Causes du silence et pistes d\'action', sil_prio:'Province prioritaire.', sil_why:'Pourquoi, et que faire →' },
+  es: { tab_why:'¿Por qué silencio?', why_h:'Causas del silencio y qué se puede hacer', sil_prio:'Provincia prioritaria.', sil_why:'Por qué y qué se puede hacer →' },
+  de: { tab_why:'Warum still?', why_h:'Ursachen der Stille und was sich tun lässt', sil_prio:'Vorrangige Provinz.', sil_why:'Warum, und was sich tun lässt →' }
+};
+['en','tr','fr','es','de'].forEach(l => Object.assign(T[l], V16T[l]));
 
 document.addEventListener('DOMContentLoaded', () => {
   initMap();
