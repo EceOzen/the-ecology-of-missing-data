@@ -2759,7 +2759,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* TV extras */
 (function(){try{
   var de=document.documentElement, isTv=/(^|\s)tv(\s|$)/.test(de.className);
-  var st=document.createElement('style'); st.textContent="html.tv .panel-close{left:.9rem;right:auto;width:auto;min-width:2.6rem;height:2.4rem;padding:0 .9rem;font-size:1.1rem}\nhtml.tv #species-select{display:none}\nhtml.tv #turkey-svg{width:100%;max-width:780px;max-height:none;height:auto;min-height:160px}\nhtml.tv .species-select-row{position:relative}\n#tv-pick{position:relative;flex:1;min-width:220px}\n#tv-pick>button{width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.8rem;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:.45rem .6rem;cursor:pointer}\n#tv-list{position:absolute;left:0;right:0;bottom:100%;max-height:45vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);z-index:70;display:none}\n#tv-list.open{display:block}\n#tv-list button{display:block;width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.68rem;line-height:1.25;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--border);padding:.4rem .6rem;cursor:pointer}\n#tv-list button.cur{color:var(--glow)}\n"; document.head.appendChild(st);
+  var st=document.createElement('style'); st.textContent="html.tv .panel-close{position:static!important;display:block;align-self:flex-start;margin:0 0 .9rem 0;width:auto;min-width:3rem;height:2.6rem;padding:0 1rem;font-size:1.2rem}\nhtml.tv .panel-hint{display:none!important}\nhtml.tv #tv-btns{position:absolute;left:1rem;bottom:3.8rem;display:flex;gap:.6rem;z-index:6}\nhtml.tv #tv-btns .zoom-reset,html.tv #tv-btns #how-btn{position:static!important}\n#how-pop{position:fixed;left:1rem;right:1rem;bottom:7rem;max-width:640px;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:1rem 1.2rem;font-size:.85rem;line-height:1.5;z-index:80;display:none}\nhtml.tv #species-select{display:none}\nhtml.tv #turkey-svg{width:100%;max-width:780px;max-height:none;height:auto;min-height:160px}\nhtml.tv .species-select-row{position:relative}\n#tv-pick{position:relative;flex:1;min-width:220px}\n#tv-pick>button{width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.8rem;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:.45rem .6rem;cursor:pointer}\n#tv-list{position:absolute;left:0;right:0;bottom:100%;max-height:45vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);z-index:70;display:none}\n#tv-list.open{display:block}\n#tv-list button{display:block;width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.68rem;line-height:1.25;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--border);padding:.4rem .6rem;cursor:pointer}\n#tv-list button.cur{color:var(--glow)}\n"; document.head.appendChild(st);
   function panelOpen(){var p=document.getElementById('side-panel');return p&&p.className.indexOf('open')>=0;}
   function closePicker(){var l=document.getElementById('tv-list'); if(l) l.className='';}
   /* tapping the same province again closes the card */
@@ -2769,7 +2769,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click',function(e){
     var t=e.target, inside=function(s){return t.closest&&t.closest(s);};
     if(!inside('#tv-pick')) closePicker();
-    if(inside('#side-panel,.il,.species-panel,.zoom-reset,#intro,.modal,nav,.tabs,button[data-tab]')) return;
+    var hp=document.getElementById('how-pop'); if(hp && !inside('#how-btn')) hp.style.display='none';
+    if(inside('#side-panel,.il,.species-panel,.zoom-reset,#intro,.modal,#how-pop,#how-btn')) return;
     if(panelOpen()) resetView();
   });
   if(!isTv) return;
@@ -2788,6 +2789,18 @@ document.addEventListener('DOMContentLoaded', () => {
   btn.onclick=function(ev){ev.stopPropagation(); if(list.className==='open'){list.className='';return;} build(); label(); list.className='open';};
   var _a=applySpeciesFilter; applySpeciesFilter=function(k){_a(k); label();};
   label(); setTimeout(label,500); setTimeout(label,2000);
+  var zr=document.querySelector('.zoom-reset');
+  if(zr){
+    var bx=document.createElement('div'); bx.id='tv-btns'; zr.parentNode.insertBefore(bx,zr); bx.appendChild(zr);
+    var hb=document.createElement('button'); hb.id='how-btn'; hb.className='zoom-reset'; hb.type='button'; bx.appendChild(hb);
+    var pop=document.createElement('div'); pop.id='how-pop'; document.body.appendChild(pop);
+    var HT={tr:'Nasıl çalışır?',en:'How it works',fr:'Comment ça marche',es:'Cómo funciona',de:'So funktioniert’s'};
+    function lang(){try{return LANG}catch(e){return 'en'}}
+    function hl(){hb.textContent=HT[lang()]||HT.en;}
+    hl(); setInterval(hl,1500);
+    hb.onclick=function(ev){ev.stopPropagation(); if(pop.style.display==='block'){pop.style.display='none';return;}
+      var h=document.querySelector('.panel-hint'); pop.textContent=h?h.textContent:''; pop.style.display='block';};
+  }
 }catch(e){}})();
 </script>
 </body>
