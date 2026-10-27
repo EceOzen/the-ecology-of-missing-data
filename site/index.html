@@ -1023,7 +1023,7 @@ body.touring #tour-cap{opacity:1}
 /* TV mode: Samsung/LG TV browsers or ?tv=1. Manual: ?tv=1&zoom=0.7 */
 (function(){try{
   var q=location.search, ua=navigator.userAgent||'';
-  var tv=/Tizen|SMART-TV|SmartTV|Web0S|NetCast|HbbTV/i.test(ua)||/[?&]tv=1/.test(q);
+  var tv=/Tizen|SMART-TV|SmartTV|Web0S|NetCast|HbbTV/i.test(ua)||/[?&]tv=1/.test(q);try{if(/[?&]tv=1/.test(q))localStorage.setItem('tvmode','1');if(/[?&]tv=0/.test(q)){localStorage.removeItem('tvmode');tv=false;}else if(localStorage.getItem('tvmode')==='1')tv=true;}catch(e){}
   if(!tv)return;
   var m=q.match(/[?&]zoom=([0-9.]+)/), manual=m?parseFloat(m[1]):0;
   var de=document.documentElement; de.className+=' tv';
@@ -2754,6 +2754,41 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#turkey-svg .il').forEach(p => p.addEventListener('click', () => selectIl(p.getAttribute('data-il'))));
 });
 
+</script>
+<script>
+/* TV extras */
+(function(){try{
+  var de=document.documentElement, isTv=/(^|\s)tv(\s|$)/.test(de.className);
+  var st=document.createElement('style'); st.textContent="html.tv .panel-close{left:.9rem;right:auto;width:auto;min-width:2.6rem;height:2.4rem;padding:0 .9rem;font-size:1.1rem}\nhtml.tv #species-select{display:none}\nhtml.tv #turkey-svg{width:100%;max-width:780px;max-height:none;height:auto;min-height:160px}\nhtml.tv .species-select-row{position:relative}\n#tv-pick{position:relative;flex:1;min-width:220px}\n#tv-pick>button{width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.8rem;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:.45rem .6rem;cursor:pointer}\n#tv-list{position:absolute;left:0;right:0;bottom:100%;max-height:45vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);z-index:70;display:none}\n#tv-list.open{display:block}\n#tv-list button{display:block;width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.68rem;line-height:1.25;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--border);padding:.4rem .6rem;cursor:pointer}\n#tv-list button.cur{color:var(--glow)}\n"; document.head.appendChild(st);
+  function panelOpen(){var p=document.getElementById('side-panel');return p&&p.className.indexOf('open')>=0;}
+  function closePicker(){var l=document.getElementById('tv-list'); if(l) l.className='';}
+  /* tapping the same province again closes the card */
+  var _sel=selectIl;
+  selectIl=function(n){ if(selectedIl===n && panelOpen()){ resetView(); return; } _sel(n); };
+  /* tapping anywhere else closes the card and the picker */
+  document.addEventListener('click',function(e){
+    var t=e.target, inside=function(s){return t.closest&&t.closest(s);};
+    if(!inside('#tv-pick')) closePicker();
+    if(inside('#side-panel,.il,.species-panel,.zoom-reset,#intro,.modal,nav,.tabs,button[data-tab]')) return;
+    if(panelOpen()) resetView();
+  });
+  if(!isTv) return;
+  var sel=document.getElementById('species-select'); if(!sel) return;
+  var wrap=document.createElement('div'); wrap.id='tv-pick';
+  var btn=document.createElement('button'); btn.type='button';
+  var list=document.createElement('div'); list.id='tv-list';
+  wrap.appendChild(btn); wrap.appendChild(list); sel.parentNode.insertBefore(wrap, sel.nextSibling);
+  function label(){var o=sel.options[sel.selectedIndex]; btn.textContent=(o?o.text:'')+'  ▾';}
+  function build(){list.innerHTML='';
+    for(var i=0;i<sel.options.length;i++){(function(i){
+      var b=document.createElement('button'); b.type='button'; b.textContent=sel.options[i].text;
+      if(i===sel.selectedIndex) b.className='cur';
+      b.onclick=function(ev){ev.stopPropagation(); sel.selectedIndex=i; list.className=''; applySpeciesFilter(sel.value); label();};
+      list.appendChild(b);})(i);}}
+  btn.onclick=function(ev){ev.stopPropagation(); if(list.className==='open'){list.className='';return;} build(); label(); list.className='open';};
+  var _a=applySpeciesFilter; applySpeciesFilter=function(k){_a(k); label();};
+  label(); setTimeout(label,500); setTimeout(label,2000);
+}catch(e){}})();
 </script>
 </body>
 </html>
