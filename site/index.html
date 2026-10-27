@@ -399,7 +399,7 @@
   body::before {
     content: "";
     position: fixed;
-    inset: 0;
+    top:0;right:0;bottom:0;left:0;
     pointer-events: none;
     background:
       radial-gradient(circle at 22% 18%, rgba(155,226,123,0.07), transparent 24%),
@@ -630,7 +630,7 @@
   .satellite-crop::before {
     content: "";
     position: absolute;
-    inset: -20%;
+    top:-20%;right:-20%;bottom:-20%;left:-20%;
     background:
       repeating-linear-gradient(35deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 8px),
       repeating-linear-gradient(95deg, rgba(0,0,0,0.05) 0 1px, transparent 1px 14px);
@@ -641,7 +641,7 @@
   .satellite-crop::after {
     content: "";
     position: absolute;
-    inset: 0;
+    top:0;right:0;bottom:0;left:0;
     background: var(--sat-mask, radial-gradient(circle at 50% 50%, transparent, rgba(242,239,230,.18)));
   }
 
@@ -885,7 +885,7 @@
   .tcard:hover{border-color:var(--alive);background:rgba(34,50,38,.8)}
   .tcard .av{flex:none;width:56px;height:56px;border-radius:50%;object-fit:cover;background:#1b2820;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:0.90rem;color:var(--alive)}
   .tcard .tx{display:block}
-  .modal{position:fixed;inset:0;background:rgba(5,9,6,.78);z-index:50;display:flex;align-items:center;justify-content:center;padding:1rem}
+  .modal{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(5,9,6,.78);z-index:50;display:flex;align-items:center;justify-content:center;padding:1rem}
   .modal[hidden]{display:none}
   .modal-card{position:relative;background:#141c17;border:1px solid var(--border);max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:2rem}
   .modal-body .av{width:120px;height:120px;border-radius:50%;object-fit:cover;background:#1b2820;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:1.6rem;color:var(--alive);margin-bottom:1rem}
@@ -965,9 +965,9 @@ html{font-size:17px}
 @media (max-height:820px) and (min-width:900px){header{padding:1.2rem 2rem .8rem}h1{font-size:clamp(1.4rem,2.6vw,2rem)}.eyebrow{margin-bottom:.3rem}#turkey-svg{max-height:46vh;width:auto;margin-left:auto;margin-right:auto}.page{min-height:0}}
 @media (max-width:1500px){.panel-hint{position:static;max-width:none;text-align:center;margin:.8rem auto 0;padding:0 1rem}}
 /* intro / attract screen */
-#intro{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;transition:opacity .6s}
+#intro{position:fixed;top:0;right:0;bottom:0;left:0;z-index:80;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;transition:opacity .6s}
 #intro.hide{opacity:0;pointer-events:none}
-#intro-bg{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
+#intro-bg{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;opacity:.5;pointer-events:none}
 #intro-bg .ib{stroke:none;cursor:default;fill:var(--d,#1b2820);animation:breathe 5s ease-in-out infinite alternate}
 @keyframes breathe{from{opacity:.25}to{opacity:1}}
 #intro .in{position:relative;max-width:960px}
@@ -1297,7 +1297,7 @@ try { const s = localStorage.getItem('lang'); if (['en','tr','fr','es','de'].inc
 const WARN = 'color:#b8893c';
 const T = {
  en: {
-  eyebrow:'MozFest 2026 · Wilding Creativity · Concept Prototype',
+  eyebrow:'MozFest 2026 · Wilding Creativity',
   subtitle:'Ecological Ghosts · Citizen Science · Data Silence',
   instr:'↗ Click a province · or choose a bird below',
   hint:"Brighter = more records per km². Click a province to see what was recorded, and what probably wasn't.",
@@ -1306,7 +1306,7 @@ const T = {
   readnote:'<b>How to read this:</b> brightness = GBIF records per 100 km² (2010–2026; eBird feeds GBIF), log scale. Pick a bird: green = recorded; <span style="'+WARN+'">amber = no record here, but a neighbouring province has one (possibly unrecorded, not necessarily absent)</span>; dark = no record nearby. Records reflect where observers go, not only where birds are. ♪ LISTEN: each province is a tone, higher = more records; no record = silence.',
   placeholder:'Click a province.<br><br>Some places are loud with observation. Others hold ecological ghosts: species that are probably there, but were never recorded.<br><br><em>The silence is not absence.<br>It is a record of what was never counted.</em>',
   quote:"<em>What gets measured gets protected. What doesn't — doesn't.</em>",
-  footer1:'CONCEPT PROTOTYPE · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Data: GBIF (incl. eBird, iNaturalist) · eBird · WorldPop · EltonTraits (names)',
   d_lo:'few records', d_hi:'many records per km² (log)',
   l_rec:n=>'Recorded ('+n+')', l_ghost:n=>'Not recorded, neighbour has it ('+n+')', l_none:n=>'No record nearby ('+n+')',
@@ -1318,7 +1318,7 @@ const T = {
   now_none:'no record', now_rec:c=>c+' records', national:n=>n+' records nationwide', recs:'records', loc:'en-GB'
  },
  tr: {
-  eyebrow:'MozFest 2026 · Wilding Creativity · Konsept Prototipi',
+  eyebrow:'MozFest 2026 · Wilding Creativity',
   subtitle:'Ekolojik Hayaletler · Vatandaş Bilimi · Veri Sessizliği',
   instr:'↗ Bir ile tıkla · ya da aşağıdan bir kuş seç',
   hint:'Daha parlak = km² başına daha fazla kayıt. Bir ile tıkla: nelerin kaydedildiğini, nelerin muhtemelen kaydedilmediğini gör.',
@@ -1327,7 +1327,7 @@ const T = {
   readnote:'<b>Nasıl okunur:</b> parlaklık = 100 km² başına GBIF kaydı (2010–2026; eBird GBIF\'e akar), log ölçek. Bir kuş seçince: yeşil = kayıtlı; <span style="'+WARN+'">kehribar = burada kayıt yok ama komşu ilde var (belki kaydedilmemiş, mutlaka yok demek değil)</span>; koyu = yakında da kayıt yok. Kayıtlar yalnızca kuşların nerede olduğunu değil, gözlemcilerin nereye gittiğini de yansıtır. ♪ DİNLE: her il bir ton, yükseklik = kayıt sayısı; kayıt yoksa sessizlik.',
   placeholder:'Bir ile tıkla.<br><br>Bazı yerler gözlemle gürültülüdür. Bazıları ekolojik hayaletler barındırır: muhtemelen orada olan ama hiç kaydedilmemiş türler.<br><br><em>Sessizlik yokluk değildir.<br>Sayılmamış olanın kaydıdır.</em>',
   quote:'<em>Ölçülen korunur. Ölçülmeyen — korunmaz.</em>',
-  footer1:'KONSEPT PROTOTİPİ · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Veri: GBIF (eBird ve iNaturalist dahil) · eBird · WorldPop · EltonTraits (isimler)',
   d_lo:'az kayıt', d_hi:'km² başına çok kayıt (log)',
   l_rec:n=>'Kayıtlı ('+n+')', l_ghost:n=>'Kayıt yok, komşuda var ('+n+')', l_none:n=>'Yakında da kayıt yok ('+n+')',
@@ -1344,7 +1344,7 @@ const t = (k, ...a) => { const v = T[LANG][k]; return typeof v === 'function' ? 
 /* ===== v6 translations: FR + ES, and new keys for all four ===== */
 const FRES = {
  fr: {
-  eyebrow:'MozFest 2026 · Wilding Creativity · Prototype conceptuel',
+  eyebrow:'MozFest 2026 · Wilding Creativity',
   subtitle:'Fantômes écologiques · Science citoyenne · Silence des données',
   instr:'↗ Clique sur une province · ou choisis un oiseau ci-dessous',
   hint:"Plus clair = plus d'enregistrements par km². Clique sur une province : ce qui a été enregistré, et ce qui probablement ne l'a pas été.",
@@ -1353,7 +1353,7 @@ const FRES = {
   readnote:'<b>Comment lire :</b> luminosité = enregistrements GBIF par 100 km² (2010–2026 ; eBird alimente GBIF), échelle log. Choisis un oiseau : vert = enregistré ; <span style="'+WARN+'">ambre = aucun enregistrement ici, mais une province voisine en a un (peut-être non enregistré, pas forcément absent)</span> ; sombre = aucun enregistrement à proximité. Les données reflètent aussi où vont les observateurs, pas seulement où sont les oiseaux. ♪ ÉCOUTER : chaque province est une note, plus aiguë = plus d\'enregistrements ; aucun enregistrement = silence.',
   placeholder:"Clique sur une province.<br><br>Certains lieux résonnent d'observations. D'autres abritent des fantômes écologiques : des espèces probablement présentes, mais jamais enregistrées.<br><br><em>Le silence n'est pas l'absence.<br>C'est la trace de ce qui n'a jamais été compté.</em>",
   quote:"<em>Ce qui est mesuré est protégé. Ce qui ne l'est pas — ne l'est pas.</em>",
-  footer1:'PROTOTYPE CONCEPTUEL · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Données : GBIF (dont eBird, iNaturalist) · eBird · WorldPop · EltonTraits (noms)',
   d_lo:"peu d'enregistrements", d_hi:"beaucoup d'enregistrements par km² (log)",
   l_rec:n=>'Enregistré ('+n+')', l_ghost:n=>"Non enregistré, un voisin l'a ("+n+')', l_none:n=>'Aucun enregistrement à proximité ('+n+')',
@@ -1365,7 +1365,7 @@ const FRES = {
   now_none:'aucun enregistrement', now_rec:c=>c+' enregistrements', national:n=>n+' enregistrements au niveau national', recs:'enregistrements', loc:'fr-FR'
  },
  es: {
-  eyebrow:'MozFest 2026 · Wilding Creativity · Prototipo conceptual',
+  eyebrow:'MozFest 2026 · Wilding Creativity',
   subtitle:'Fantasmas ecológicos · Ciencia ciudadana · Silencio de datos',
   instr:'↗ Haz clic en una provincia · o elige un ave abajo',
   hint:'Más brillante = más registros por km². Haz clic en una provincia: qué se registró y qué probablemente no.',
@@ -1374,7 +1374,7 @@ const FRES = {
   readnote:'<b>Cómo leerlo:</b> brillo = registros de GBIF por 100 km² (2010–2026; eBird alimenta GBIF), escala logarítmica. Elige un ave: verde = registrada; <span style="'+WARN+'">ámbar = sin registro aquí, pero una provincia vecina sí lo tiene (quizá no registrada, no necesariamente ausente)</span>; oscuro = sin registros cerca. Los registros reflejan también adónde van los observadores, no solo dónde están las aves. ♪ ESCUCHAR: cada provincia es un tono, más agudo = más registros; sin registro = silencio.',
   placeholder:'Haz clic en una provincia.<br><br>Algunos lugares resuenan de observaciones. Otros guardan fantasmas ecológicos: especies que probablemente están allí, pero nunca se registraron.<br><br><em>El silencio no es ausencia.<br>Es el rastro de lo que nunca se contó.</em>',
   quote:'<em>Lo que se mide se protege. Lo que no — no.</em>',
-  footer1:'PROTOTIPO CONCEPTUAL · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Datos: GBIF (incl. eBird, iNaturalist) · eBird · WorldPop · EltonTraits (nombres)',
   d_lo:'pocos registros', d_hi:'muchos registros por km² (log)',
   l_rec:n=>'Registrada ('+n+')', l_ghost:n=>'Sin registro, un vecino la tiene ('+n+')', l_none:n=>'Sin registros cerca ('+n+')',
@@ -1964,7 +1964,7 @@ function selectIl(name) {
       <div class="il-kpi"><b>#${s.rank}<small style="font-size:.9rem"> / 81</small></b><span>${t('k_rank')}</span></div>
       <div class="il-kpi"><b>${fmt(per100(name))}</b><span>${t('k_per')}</span></div>
       <div class="il-kpi"><b>${birds}<small style="font-size:.9rem"> / ${total}</small></b><span>${t('k_birds')}</span></div>
-      <div class="il-kpi"><b>${s.ebird ?? '—'}</b><span>${t('k_ebird')}</span></div>
+      <div class="il-kpi"><b>${s.ebird != null ? s.ebird : '—'}</b><span>${t('k_ebird')}</span></div>
       <div class="il-kpi"><b>${popd}</b><span>${t('k_pop')}</span></div>
       ${s.sil != null ? `<div class="il-kpi"><b>${s.sil}<small style="font-size:.9rem"> / 100</small></b><span>${t('k_sil')}</span></div>` : ''}
     </div>
@@ -2549,7 +2549,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCard();
 
 /* ===== v12: German ===== */
 T.de = {
-  eyebrow:'MozFest 2026 · Wilding Creativity · Konzeptprototyp',
+  eyebrow:'MozFest 2026 · Wilding Creativity',
   subtitle:'Ökologische Geister · Bürgerwissenschaft · Datenstille',
   instr:'↗ Provinz anklicken · oder unten einen Vogel wählen',
   hint:'Heller = mehr Meldungen pro km². Klicke auf eine Provinz, um zu sehen, was erfasst wurde – und was vermutlich nicht.',
@@ -2558,7 +2558,7 @@ T.de = {
   readnote:'<b>So liest man das:</b> Helligkeit = GBIF-Meldungen pro 100 km² (2010–2026; eBird speist GBIF), logarithmische Skala. Wähle einen Vogel: grün = erfasst; <span style="'+WARN+'">bernstein = hier keine Meldung, aber eine Nachbarprovinz hat eine (möglicherweise nur nicht erfasst, nicht unbedingt abwesend)</span>; dunkel = keine Meldung in der Nähe. Meldungen zeigen, wohin Beobachtende gehen, nicht nur, wo Vögel sind. ♪ ANHÖREN: Jede Provinz ist ein Ton, höher = mehr Meldungen; keine Meldung = Stille.',
   placeholder:'Klicke auf eine Provinz.<br><br>Manche Orte sind laut vor lauter Beobachtung. Andere beherbergen ökologische Geister: Arten, die vermutlich da sind, aber nie erfasst wurden.<br><br><em>Stille ist keine Abwesenheit.<br>Sie ist das Protokoll dessen, was nie gezählt wurde.</em>',
   quote:'<em>Was gemessen wird, wird geschützt. Was nicht gemessen wird – nicht.</em>',
-  footer1:'KONZEPTPROTOTYP · THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
+  footer1:'THE ECOLOGY OF MISSING DATA · MOZFEST 2026',
   footer2:'Daten: GBIF (inkl. eBird, iNaturalist) · eBird · WorldPop · EltonTraits (Namen)',
   d_lo:'wenige Meldungen', d_hi:'viele Meldungen pro km² (log)',
   l_rec:n=>'Erfasst ('+n+')', l_ghost:n=>'Nicht erfasst, Nachbar hat sie ('+n+')', l_none:n=>'Keine Meldung in der Nähe ('+n+')',
