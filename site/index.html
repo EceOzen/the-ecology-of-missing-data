@@ -1031,7 +1031,7 @@ body.touring #tour-cap{opacity:1}
   st.textContent='html.tv,html.tv body{overflow-x:hidden;max-width:100%}';
   document.head.appendChild(st);
   function fit(){var w=window.innerWidth||de.clientWidth||1280;
-    var z=manual||Math.max(0.5,Math.min(1,w/1280)); de.style.zoom=z;}
+    var z=manual||Math.max(0.5,Math.min(1,w/1280)); de.style.zoom=z; de.style.setProperty('--tvh',((window.innerHeight||720)/z)+'px');}
   fit(); window.addEventListener('resize',fit);
 }catch(e){}})();
 </script>
@@ -2759,7 +2759,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* TV extras */
 (function(){try{
   var de=document.documentElement, isTv=/(^|\s)tv(\s|$)/.test(de.className);
-  var st=document.createElement('style'); st.textContent="html.tv .panel-close{position:static!important;display:block;align-self:flex-start;margin:0 0 .9rem 0;width:auto;min-width:3rem;height:2.6rem;padding:0 1rem;font-size:1.2rem}\nhtml.tv .panel-hint{display:none!important}\nhtml.tv #tv-btns{position:absolute;left:1rem;bottom:3.8rem;display:flex;gap:.6rem;z-index:6}\nhtml.tv #tv-btns .zoom-reset,html.tv #tv-btns #how-btn{position:static!important}\n#how-pop{position:fixed;left:1rem;right:1rem;bottom:7rem;max-width:640px;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:1rem 1.2rem;font-size:.85rem;line-height:1.5;z-index:80;display:none}\nhtml.tv #species-select{display:none}\nhtml.tv #turkey-svg{width:100%;max-width:780px;max-height:none;height:auto;min-height:160px}\nhtml.tv .species-select-row{position:relative}\n#tv-pick{position:relative;flex:1;min-width:220px}\n#tv-pick>button{width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.8rem;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:.45rem .6rem;cursor:pointer}\n#tv-list{position:absolute;left:0;right:0;bottom:100%;max-height:45vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);z-index:70;display:none}\n#tv-list.open{display:block}\n#tv-list button{display:block;width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.68rem;line-height:1.25;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--border);padding:.4rem .6rem;cursor:pointer}\n#tv-list button.cur{color:var(--glow)}\n"; document.head.appendChild(st);
+  var st=document.createElement('style'); st.textContent="html.tv .panel-close{position:static!important;display:block;align-self:flex-start;margin:0 0 .9rem 0;width:auto;min-width:3rem;height:2.6rem;padding:0 1rem;font-size:1.2rem}\nhtml.tv .panel-hint{display:none!important}\nhtml.tv #tv-btns{position:absolute;left:1rem;bottom:3.8rem;display:flex;gap:.6rem;z-index:6}\nhtml.tv #tv-btns .zoom-reset,html.tv #tv-btns #how-btn{position:static!important}\n#how-pop{position:fixed;left:1rem;right:1rem;bottom:7rem;max-width:640px;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:1rem 1.2rem;font-size:.85rem;line-height:1.5;z-index:80;display:none}\nhtml.tv.tvmap,html.tv.tvmap body{overflow:hidden}\nhtml.tv.tvmap body{height:var(--tvh);min-height:0;display:flex;flex-direction:column}\nhtml.tv.tvmap header{flex:none;padding:.5rem 1.5rem .3rem}\nhtml.tv.tvmap header .eyebrow{margin-bottom:.15rem}\nhtml.tv.tvmap header h1{font-size:1.5rem;line-height:1.1}\nhtml.tv.tvmap header .subtitle{margin-top:.15rem}\nhtml.tv.tvmap nav.tabs{flex:none}\nhtml.tv.tvmap #tab-map{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden}\nhtml.tv.tvmap .map-area{flex:1 1 auto;min-height:0;padding:.4rem 1rem .2rem;overflow:hidden}\nhtml.tv.tvmap .map-instruction{margin-bottom:.3rem;flex:none}\nhtml.tv.tvmap .map-viewport{flex:1 1 auto;min-height:0;max-width:none;width:100%}\nhtml.tv.tvmap .map-viewport{position:relative}\nhtml.tv.tvmap #turkey-svg{position:absolute;top:0;left:0;width:100%;height:100%;max-width:none;max-height:none;min-height:0}\nhtml.tv.tvmap .legend{flex:none;margin-top:.3rem}\nhtml.tv.tvmap .species-panel{flex:none;padding-top:.4rem;padding-bottom:.4rem}\nhtml.tv.tvmap .read-note{display:none}\nhtml.tv.tvmap .species-waveform{max-height:48px}\nhtml.tv.tvmap footer{flex:none;padding:.3rem 1.5rem}\nhtml.tv.tvmap #tv-btns{bottom:.5rem}\nhtml.tv .il-kpis{grid-template-columns:1fr 1fr 1fr;gap:.4rem}\nhtml.tv .il-kpi b{font-size:1.15rem}\nhtml.tv .il-kpi span{font-size:.62rem}\n#how-pop{left:50%!important;top:50%!important;bottom:auto!important;right:auto!important;transform:translate(-50%,-50%);width:min(760px,90vw);max-width:none!important;white-space:pre-line;font-size:.95rem!important}\nhtml.tv #species-select{display:none}\nhtml.tv #turkey-svg{width:100%;max-width:780px;max-height:none;height:auto;min-height:160px}\nhtml.tv .species-select-row{position:relative}\n#tv-pick{position:relative;flex:1;min-width:220px}\n#tv-pick>button{width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.8rem;background:var(--panel);color:var(--ink);border:1px solid var(--border);padding:.45rem .6rem;cursor:pointer}\n#tv-list{position:absolute;left:0;right:0;bottom:100%;max-height:45vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);z-index:70;display:none}\n#tv-list.open{display:block}\n#tv-list button{display:block;width:100%;text-align:left;font-family:'Space Mono',monospace;font-size:.68rem;line-height:1.25;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--border);padding:.4rem .6rem;cursor:pointer}\n#tv-list button.cur{color:var(--glow)}\n"; document.head.appendChild(st);
   function panelOpen(){var p=document.getElementById('side-panel');return p&&p.className.indexOf('open')>=0;}
   function closePicker(){var l=document.getElementById('tv-list'); if(l) l.className='';}
   /* tapping the same province again closes the card */
@@ -2769,6 +2769,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click',function(e){
     var t=e.target, inside=function(s){return t.closest&&t.closest(s);};
     if(!inside('#tv-pick')) closePicker();
+    if(inside('button[data-tab="map"]')){try{resetMap();}catch(e){}}
     var hp=document.getElementById('how-pop'); if(hp && !inside('#how-btn')) hp.style.display='none';
     if(inside('#side-panel,.il,.species-panel,.zoom-reset,#intro,.modal,#how-pop,#how-btn')) return;
     if(panelOpen()) resetView();
@@ -2789,6 +2790,8 @@ document.addEventListener('DOMContentLoaded', () => {
   btn.onclick=function(ev){ev.stopPropagation(); if(list.className==='open'){list.className='';return;} build(); label(); list.className='open';};
   var _a=applySpeciesFilter; applySpeciesFilter=function(k){_a(k); label();};
   label(); setTimeout(label,500); setTimeout(label,2000);
+  var hsh=(location.hash||'').slice(1); if(!/^(mig|prot|why|about|team|future|contact)$/.test(hsh)) de.className+=' tvmap';
+  var _st=setTab; setTab=function(n){_st(n); var c=de.className.replace(/\s*tvmap/g,''); de.className=(n==='map')?c+' tvmap':c;};
   var zr=document.querySelector('.zoom-reset');
   if(zr){
     var bx=document.createElement('div'); bx.id='tv-btns'; zr.parentNode.insertBefore(bx,zr); bx.appendChild(zr);
@@ -2799,7 +2802,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function hl(){hb.textContent=HT[lang()]||HT.en;}
     hl(); setInterval(hl,1500);
     hb.onclick=function(ev){ev.stopPropagation(); if(pop.style.display==='block'){pop.style.display='none';return;}
-      var h=document.querySelector('.panel-hint'); pop.textContent=h?h.textContent:''; pop.style.display='block';};
+      var h=document.querySelector('.panel-hint'), rn=document.querySelector('.read-note'); pop.textContent=(h?h.textContent:'')+'\n\n'+(rn?rn.textContent:''); pop.style.display='block';};
   }
 }catch(e){}})();
 </script>
